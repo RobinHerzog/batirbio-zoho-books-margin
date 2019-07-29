@@ -1,0 +1,6 @@
+@media (min-width: 992px) {
+  .item-new .col-md-6 + .col-md-6:nth-of-type(2n) {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
+}

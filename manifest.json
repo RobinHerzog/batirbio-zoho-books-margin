@@ -20,7 +20,8 @@
     {
       "matches": ["*://books.zoho.eu/*"],
       "run_at": "document_end",
-      "js": ["/js/main.js"]
+      "js": ["/js/main.js"],
+      "css": ["batirbio.css"]
     }
   ],
   "permissions": ["webRequest", "*://books.zoho.eu/*"],
