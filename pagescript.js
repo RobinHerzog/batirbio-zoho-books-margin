@@ -37,46 +37,110 @@ function hack() {
     typeof document.querySelectorAll(".qty-field") !== "undefined"
   ) {
     setInterval(() => {
-      var qt = Array.from(document.querySelectorAll(".qty-field")).map(
-        item => item.value
+      console.log("setInterval");
+      const qt = [];
+      const rate_item = [];
+      const rate_purchase_2 = [];
+      const rate_sold = [];
+      const total = [];
+      let SumPrixVente = 0;
+      const item = Array.from(
+        document.querySelectorAll(".line-item-body > tr")
       );
 
-      var rate_purchase = Array.from(
-        document.querySelectorAll(
-          ".line-item-body > tr > td:nth-child(3) input"
-        )
-      ).map(item => item.value);
+      item.forEach(function(e, index) {
+        if (e.classList.contains("line-item-column-Header")) {
+          rate_purchase_2.push(null);
+          qt.push(null);
+          rate_item.push(null);
+          rate_sold.push(null);
+        } else {
+          rate_purchase_2.push(
+            e.querySelector("td:nth-child(3) input").value || "0"
+          );
+          qt.push(e.querySelector(".qty-field").value);
+          rate_item.push(e.querySelector(".item-rate input").value);
 
-      var total = [];
+          let prixVente = e
+            .querySelector(".item-amount")
+            .innerText.replace(/,/g, ".")
+            .replace(/ /g, "");
 
-      rate_purchase.forEach(function(element, index) {
-        total.push(rate_purchase[index] * qt[index]);
+          console.log(prixVente);
+
+          rate_sold.push(parseFloat(prixVente));
+          SumPrixVente += parseFloat(prixVente);
+        }
       });
 
-      var rate_item = Array.from(
-        document.querySelectorAll(".item-rate input")
-      ).map(item => item.value);
+      for (indexTotal = 0; indexTotal <= rate_purchase_2.length; indexTotal++) {
+        if (rate_purchase_2[indexTotal]) {
+          total.push(rate_purchase_2[indexTotal] * qt[indexTotal]);
+        }
+      }
 
-      rate_item.forEach(function(element, index) {
-        var tx_marque = 1 - rate_purchase[index] / rate_item[index];
-        var i = index + 1;
-        document.querySelector(
-          ".line-item-body > tr:nth-child(" + i + ") > td:nth-child(4) input"
-        ).value = Number(tx_marque * 100).toFixed(2) + "%";
+      console.log("total", total);
+
+      rate_purchase_2.forEach(function(element, index) {
+        if (rate_purchase_2) {
+          var tx_marque = 1 - rate_purchase_2[index] / rate_item[index];
+          var indexElement = index + 1;
+
+          const query = document.querySelector(
+            ".line-item-body > tr.new-line-item:not(.line-item-column-Header):nth-child(" +
+              indexElement +
+              ") > td:nth-child(4) input"
+          );
+
+          if (query) {
+            query.value = Number(tx_marque * 100).toFixed(2) + "%";
+          }
+        }
       });
 
-      const sum = total.reduce(
+      const sumPrixAchat = total.reduce(
         (accumulator, currentValue) =>
           parseFloat(accumulator) + parseFloat(currentValue)
       );
+
+      console.log("sumPrixAchat", sumPrixAchat);
+      console.log("SumPrixVente", SumPrixVente);
+
+      let adjustment = parseFloat(
+        document.querySelector(".label-editable .col-md-4 input").value
+      );
+
+      if (isNaN(adjustment)) {
+        adjustment = 0;
+      }
 
       const discount = document.querySelector(
         ".total-section div:nth-child(2) > div.total-amount span"
       ).innerText;
 
-      const newValue = Number(
-        parseFloat(sum) - Math.abs(parseFloat(discount))
+      let newValue = Number(
+        SumPrixVente -
+          parseFloat(sumPrixAchat) -
+          Math.abs(parseFloat(discount)) +
+          adjustment
       ).toFixed(2);
+
+      if (adjustment >= 0) {
+        newValue = Number(
+          SumPrixVente -
+            parseFloat(sumPrixAchat) -
+            Math.abs(parseFloat(discount)) +
+            Math.abs(adjustment)
+        ).toFixed(2);
+      }
+      if (adjustment < 0) {
+        newValue = Number(
+          SumPrixVente -
+            parseFloat(sumPrixAchat) -
+            Math.abs(parseFloat(discount)) -
+            Math.abs(adjustment)
+        ).toFixed(2);
+      }
 
       document.getElementById("marge").innerHTML = newValue;
       document.querySelector(".cf-item input").value = newValue;

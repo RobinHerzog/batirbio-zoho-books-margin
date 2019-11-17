@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Batirbio Margin",
-  "version": "1.0.0",
+  "version": "1.0.6",
   "description": "Car les marges c'est important.",
   "icons": {
     "48": "img/icon.png",
@@ -18,12 +18,12 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://books.zoho.eu/*"],
+      "matches": ["*://devis.batirbio.org/*"],
       "run_at": "document_end",
       "js": ["/js/main.js"],
       "css": ["batirbio.css"]
     }
   ],
-  "permissions": ["webRequest", "*://books.zoho.eu/*"],
+  "permissions": ["webRequest", "*://devis.batirbio.org/*"],
   "web_accessible_resources": ["pagescript.js"]
 }
