@@ -66,8 +66,6 @@ function hack() {
             .innerText.replace(/,/g, ".")
             .replace(/ /g, "");
 
-          console.log(prixVente);
-
           rate_sold.push(parseFloat(prixVente));
           SumPrixVente += parseFloat(prixVente);
         }
@@ -78,8 +76,6 @@ function hack() {
           total.push(rate_purchase_2[indexTotal] * qt[indexTotal]);
         }
       }
-
-      console.log("total", total);
 
       rate_purchase_2.forEach(function(element, index) {
         if (rate_purchase_2) {
@@ -107,16 +103,23 @@ function hack() {
       console.log("SumPrixVente", SumPrixVente);
 
       let adjustment = parseFloat(
-        document.querySelector(".label-editable .col-md-4 input").value
+        document
+          .querySelector(".label-editable .col-md-4 input")
+          .value.replace(/ /g, "")
       );
 
       if (isNaN(adjustment)) {
         adjustment = 0;
       }
 
-      const discount = document.querySelector(
-        ".total-section div:nth-child(2) > div.total-amount span"
-      ).innerText;
+      const discount = document
+        .querySelector(
+          ".total-section div:nth-child(2) > div.total-amount span"
+        )
+        .innerText.replace(/ /g, "");
+
+      console.log("discount", Math.abs(parseFloat(discount)));
+      console.log("adjustment", adjustment);
 
       let newValue = Number(
         SumPrixVente -
