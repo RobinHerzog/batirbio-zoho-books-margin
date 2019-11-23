@@ -158,7 +158,7 @@ function hack() {
       document.body.appendChild(wrapper);
     }
   } else {
-    if (typeof document.querySelector("#marge") !== "undefined")
+    if (document.querySelector("#marge"))
       document.getElementById("marge").remove();
   }
 }
@@ -166,5 +166,6 @@ function hack() {
 hack();
 
 window.onpopstate = function(event) {
+  console.log("Update page");
   hack();
 };
