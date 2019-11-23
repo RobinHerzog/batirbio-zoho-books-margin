@@ -147,7 +147,7 @@ function hack() {
 
       document.getElementById("marge").innerHTML = newValue;
       document.querySelector(".cf-item input").value = newValue;
-    }, 2500);
+    }, 500);
 
     if (!document.querySelector("#marge")) {
       var wrapper = document.createElement("div");
