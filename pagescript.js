@@ -31,12 +31,15 @@ function hack() {
     `);
   }
 
-  if (
-    document.location.href.indexOf("edit") !== -1 &&
-    document.location.href.indexOf("quotes") !== -1 &&
-    typeof document.querySelectorAll(".qty-field") !== "undefined"
-  ) {
-    setInterval(() => {
+  console.log(document.location.href.indexOf("edit"));
+  console.log(document.location.href.indexOf("quotes"));
+  console.log(typeof document.querySelectorAll(".qty-field") !== "undefined");
+
+  setInterval(() => {
+    if (
+      document.location.href.indexOf("edit") !== -1 &&
+      document.location.href.indexOf("quotes") !== -1
+    ) {
       console.log("setInterval");
       const qt = [];
       const rate_item = [];
@@ -149,19 +152,19 @@ function hack() {
 
       document.getElementById("marge").innerHTML = newValue;
       document.querySelector(".cf-field").value = newValue;
-    }, 500);
-
-    if (!document.querySelector("#marge")) {
-      var wrapper = document.createElement("div");
-
-      wrapper.innerHTML =
-        '<div id="marge" style="min-width:150px;font-size: 20px;padding: 5px;position:fixed;right:20px;bottom:100px;background:#fff;display: flex;align-items: center;border: 1px solid #eee;justify-content: center;text-align: center;">Loading...</div>';
-
-      document.body.appendChild(wrapper);
+    } else {
+      if (document.querySelector("#marge"))
+        document.getElementById("marge").remove();
     }
-  } else {
-    if (document.querySelector("#marge"))
-      document.getElementById("marge").remove();
+  }, 500);
+
+  if (!document.querySelector("#marge")) {
+    var wrapper = document.createElement("div");
+
+    wrapper.innerHTML =
+      '<div id="marge" style="min-width:150px;font-size: 20px;padding: 5px;position:fixed;right:20px;bottom:100px;background:#fff;display: flex;align-items: center;border: 1px solid #eee;justify-content: center;text-align: center;">Loading...</div>';
+
+    document.body.appendChild(wrapper);
   }
 }
 
