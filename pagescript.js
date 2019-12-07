@@ -104,7 +104,7 @@ function hack() {
 
       let adjustment = parseFloat(
         document
-          .querySelector(".label-editable .col-md-4 input")
+          .querySelector(".badge-editable input.text-right")
           .value.replace(/ /g, "")
       );
 
