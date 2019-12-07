@@ -103,9 +103,11 @@ function hack() {
       console.log("SumPrixVente", SumPrixVente);
 
       let adjustment = parseFloat(
-        document
-          .querySelector(".badge-editable input.text-right")
-          .value.replace(/ /g, "")
+        document.querySelector(".badge-editable input.text-right")
+          ? document
+              .querySelector(".badge-editable input.text-right")
+              .value.replace(/ /g, "")
+          : 0
       );
 
       if (isNaN(adjustment)) {
@@ -146,7 +148,7 @@ function hack() {
       }
 
       document.getElementById("marge").innerHTML = newValue;
-      document.querySelector(".cf-item input").value = newValue;
+      document.querySelector(".cf-field").value = newValue;
     }, 500);
 
     if (!document.querySelector("#marge")) {
