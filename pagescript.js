@@ -1,7 +1,7 @@
-(function() {
+(function () {
   var node = document.createElement("style");
   document.body.appendChild(node);
-  window.addStyleString = function(str) {
+  window.addStyleString = function (str) {
     node.innerHTML = str;
   };
 })();
@@ -9,8 +9,10 @@
 function hack() {
   if (document.location.href.indexOf("inventory") !== -1) {
     addStyleString(`
-    .col-md-6 {
+    .col-lg-8 {
         width: 100% !important;
+        flex:none;
+        max-width:100%;
     }
 
     textarea.form-control {
@@ -31,16 +33,17 @@ function hack() {
     `);
   }
 
-  console.log(document.location.href.indexOf("edit"));
-  console.log(document.location.href.indexOf("quotes"));
-  console.log(typeof document.querySelectorAll(".qty-field") !== "undefined");
+  // console.log(document.location.href.indexOf("edit"));
+  // console.log(document.location.href.indexOf("quotes"));
+  // console.log(typeof document.querySelectorAll(".qty-field") !== "undefined");
 
   setInterval(() => {
     if (
-      document.location.href.indexOf("edit") !== -1 &&
+      (document.location.href.indexOf("new") ||
+        document.location.href.indexOf("edit") !== -1) &&
       document.location.href.indexOf("quotes") !== -1
     ) {
-      console.log("setInterval");
+      // console.log("setInterval");
       const qt = [];
       const rate_item = [];
       const rate_purchase_2 = [];
@@ -51,7 +54,8 @@ function hack() {
         document.querySelectorAll(".line-item-body > tr")
       );
 
-      item.forEach(function(e, index) {
+      //Par chaque item
+      item.forEach(function (e, index) {
         if (e.classList.contains("line-item-column-Header")) {
           rate_purchase_2.push(null);
           qt.push(null);
@@ -80,7 +84,7 @@ function hack() {
         }
       }
 
-      rate_purchase_2.forEach(function(element, index) {
+      rate_purchase_2.forEach(function (element, index) {
         if (rate_purchase_2) {
           var tx_marque = 1 - rate_purchase_2[index] / rate_item[index];
           var indexElement = index + 1;
@@ -102,8 +106,8 @@ function hack() {
           parseFloat(accumulator) + parseFloat(currentValue)
       );
 
-      console.log("sumPrixAchat", sumPrixAchat);
-      console.log("SumPrixVente", SumPrixVente);
+      // console.log("sumPrixAchat", sumPrixAchat);
+      // console.log("SumPrixVente", SumPrixVente);
 
       let adjustment = parseFloat(
         document.querySelector(".badge-editable input.text-right")
@@ -123,8 +127,8 @@ function hack() {
         )
         .innerText.replace(/ /g, "");
 
-      console.log("discount", Math.abs(parseFloat(discount)));
-      console.log("adjustment", adjustment);
+      // console.log("discount", Math.abs(parseFloat(discount)));
+      // console.log("adjustment", adjustment);
 
       let newValue = Number(
         SumPrixVente -
@@ -170,7 +174,7 @@ function hack() {
 
 hack();
 
-window.onpopstate = function(event) {
+window.onpopstate = function (event) {
   console.log("Update page");
   hack();
 };
