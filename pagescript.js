@@ -39,16 +39,21 @@ function hack() {
 
   setInterval(() => {
     if (
-      (document.location.href.indexOf("new") ||
+      (document.location.href.indexOf("new") !== -1 ||
         document.location.href.indexOf("edit") !== -1) &&
       document.location.href.indexOf("quotes") !== -1
     ) {
+      console.log("new", document.location.href.indexOf("new"));
+      console.log("edit", document.location.href.indexOf("edit"));
+      console.log("quotes", document.location.href.indexOf("quotes"));
+
       // console.log("setInterval");
       const qt = [];
       const rate_item = [];
       const rate_purchase_2 = [];
       const rate_sold = [];
       const total = [];
+
       let SumPrixVente = 0;
       const item = Array.from(
         document.querySelectorAll(".line-item-body > tr")
@@ -157,6 +162,7 @@ function hack() {
       document.getElementById("marge").innerHTML = newValue;
       document.querySelector(".cf-field").value = newValue;
     } else {
+      console.log("Remove marge block");
       if (document.querySelector("#marge"))
         document.getElementById("marge").remove();
     }
