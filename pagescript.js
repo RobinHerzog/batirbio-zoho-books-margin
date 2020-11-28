@@ -43,9 +43,9 @@ function hack() {
         document.location.href.indexOf("edit") !== -1) &&
       document.location.href.indexOf("quotes") !== -1
     ) {
-      console.log("new", document.location.href.indexOf("new"));
-      console.log("edit", document.location.href.indexOf("edit"));
-      console.log("quotes", document.location.href.indexOf("quotes"));
+      // console.log("new", document.location.href.indexOf("new"));
+      // console.log("edit", document.location.href.indexOf("edit"));
+      // console.log("quotes", document.location.href.indexOf("quotes"));
 
       // console.log("setInterval");
       const qt = [];
@@ -59,7 +59,7 @@ function hack() {
         document.querySelectorAll(".line-item-body > tr")
       );
 
-      //Par chaque item
+      //Pour chaque item
       item.forEach(function (e, index) {
         if (e.classList.contains("line-item-column-Header")) {
           rate_purchase_2.push(null);
@@ -67,12 +67,20 @@ function hack() {
           rate_item.push(null);
           rate_sold.push(null);
         } else {
+          
+          //Prix d'achat
           rate_purchase_2.push(
-            e.querySelector("td:nth-child(3) input").value || "0"
+            e.querySelector("td:nth-child(4) input").value || "0"
           );
+
+          //Qt de l'objet
           qt.push(e.querySelector(".qty-field").value);
+
+          //Prix de l'object
           rate_item.push(e.querySelector(".item-rate input").value);
 
+
+          //Prix de vente, dernière colonne
           let prixVente = e
             .querySelector(".item-amount")
             .innerText.replace(/,/g, ".")
@@ -94,10 +102,11 @@ function hack() {
           var tx_marque = 1 - rate_purchase_2[index] / rate_item[index];
           var indexElement = index + 1;
 
+          //Push in TX_MARQUE
           const query = document.querySelector(
             ".line-item-body > tr.new-line-item:not(.line-item-column-Header):nth-child(" +
               indexElement +
-              ") > td:nth-child(4) input"
+              ") > td:nth-child(5) input"
           );
 
           if (query) {
