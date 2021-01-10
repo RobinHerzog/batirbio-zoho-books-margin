@@ -33,20 +33,13 @@ function hack() {
     `);
   }
 
-  // console.log(document.location.href.indexOf("edit"));
-  // console.log(document.location.href.indexOf("quotes"));
-  // console.log(typeof document.querySelectorAll(".qty-field") !== "undefined");
-
   setInterval(() => {
     if (
-      (document.location.href.indexOf("new") !== -1 ||
-        document.location.href.indexOf("edit") !== -1) &&
-      document.location.href.indexOf("quotes") !== -1
+      ((document.location.href.indexOf("new") !== -1 || document.location.href.indexOf("edit") !== -1) &&
+        document.location.href.indexOf("quotes") !== -1) ||
+      ((document.location.href.indexOf("new") !== -1 || document.location.href.indexOf("edit") !== -1) &&
+        document.location.href.indexOf("salesorders") !== -1)
     ) {
-      // console.log("new", document.location.href.indexOf("new"));
-      // console.log("edit", document.location.href.indexOf("edit"));
-      // console.log("quotes", document.location.href.indexOf("quotes"));
-
       // console.log("setInterval");
       const qt = [];
       const rate_item = [];
@@ -55,9 +48,7 @@ function hack() {
       const total = [];
 
       let SumPrixVente = 0;
-      const item = Array.from(
-        document.querySelectorAll(".line-item-body > tr")
-      );
+      const item = Array.from(document.querySelectorAll(".line-item-body > tr"));
 
       //Pour chaque item
       item.forEach(function (e, index) {
@@ -67,11 +58,8 @@ function hack() {
           rate_item.push(null);
           rate_sold.push(null);
         } else {
-          
           //Prix d'achat
-          rate_purchase_2.push(
-            e.querySelector("td:nth-child(4) input").value || "0"
-          );
+          rate_purchase_2.push(e.querySelector("td:nth-child(4) input").value || "0");
 
           //Qt de l'objet
           qt.push(e.querySelector(".qty-field").value);
@@ -79,17 +67,19 @@ function hack() {
           //Prix de l'object
           rate_item.push(e.querySelector(".item-rate input").value);
 
-
           //Prix de vente, dernière colonne
-          let prixVente = e
-            .querySelector(".item-amount")
-            .innerText.replace(/,/g, ".")
-            .replace(/ /g, "");
+          let prixVente = e.querySelector(".item-amount").innerText.replace(/,/g, ".").replace(/ /g, "");
 
           rate_sold.push(parseFloat(prixVente));
           SumPrixVente += parseFloat(prixVente);
         }
       });
+
+      console.log("SumPrixVente", SumPrixVente);
+      console.log("rate_sold", rate_sold);
+      console.log("qt", qt);
+      console.log("rate_item", rate_item);
+      console.log("rate_purchase_2", rate_purchase_2);
 
       for (indexTotal = 0; indexTotal <= rate_purchase_2.length; indexTotal++) {
         if (rate_purchase_2[indexTotal]) {
@@ -116,8 +106,7 @@ function hack() {
       });
 
       const sumPrixAchat = total.reduce(
-        (accumulator, currentValue) =>
-          parseFloat(accumulator) + parseFloat(currentValue)
+        (accumulator, currentValue) => parseFloat(accumulator) + parseFloat(currentValue)
       );
 
       // console.log("sumPrixAchat", sumPrixAchat);
@@ -125,9 +114,7 @@ function hack() {
 
       let adjustment = parseFloat(
         document.querySelector(".badge-editable input.text-right")
-          ? document
-              .querySelector(".badge-editable input.text-right")
-              .value.replace(/ /g, "")
+          ? document.querySelector(".badge-editable input.text-right").value.replace(/ /g, "")
           : 0
       );
 
@@ -136,44 +123,34 @@ function hack() {
       }
 
       const discount = document
-        .querySelector(
-          ".total-section div:nth-child(2) > div.total-amount span"
-        )
+        .querySelector(".total-section div:nth-child(2) > div.total-amount span")
         .innerText.replace(/ /g, "");
 
       // console.log("discount", Math.abs(parseFloat(discount)));
       // console.log("adjustment", adjustment);
 
       let newValue = Number(
-        SumPrixVente -
-          parseFloat(sumPrixAchat) -
-          Math.abs(parseFloat(discount)) +
-          adjustment
+        SumPrixVente - parseFloat(sumPrixAchat) - Math.abs(parseFloat(discount)) + adjustment
       ).toFixed(2);
 
       if (adjustment >= 0) {
         newValue = Number(
-          SumPrixVente -
-            parseFloat(sumPrixAchat) -
-            Math.abs(parseFloat(discount)) +
-            Math.abs(adjustment)
+          SumPrixVente - parseFloat(sumPrixAchat) - Math.abs(parseFloat(discount)) + Math.abs(adjustment)
         ).toFixed(2);
       }
       if (adjustment < 0) {
         newValue = Number(
-          SumPrixVente -
-            parseFloat(sumPrixAchat) -
-            Math.abs(parseFloat(discount)) -
-            Math.abs(adjustment)
+          SumPrixVente - parseFloat(sumPrixAchat) - Math.abs(parseFloat(discount)) - Math.abs(adjustment)
         ).toFixed(2);
       }
 
       document.getElementById("marge").innerHTML = newValue;
+
+      //Write in custom field "marge" at the top of the module
       document.querySelector(".cf-field").value = newValue;
     } else {
       console.log("Remove marge block");
-      if (document.querySelector("#marge"))
-        document.getElementById("marge").remove();
+      if (document.querySelector("#marge")) document.getElementById("marge").remove();
     }
   }, 500);
 
